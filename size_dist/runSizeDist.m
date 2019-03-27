@@ -20,6 +20,18 @@ switch project
         minutes = floor(mod(timesec,3600)/60);
         seconds = mod(timesec,60);
         timehhmmss = double(seconds+minutes*100+hours*10000); 
+    case 'TECPEC'
+        ncfile = ['/kingair_data/tecpec19/processed/20',date,'.c1.nc'];
+        projdir = '/kingair_data/tecpec19/oap_work/';
+        main_nc = netcdf.open(ncfile);
+        timesec = netcdf.getVar(main_nc, netcdf.inqVarID(main_nc, 'time'), 'double');
+        tas = netcdf.getVar(main_nc, netcdf.inqVarID(main_nc, 'tas'),'double');
+        netcdf.close(main_nc);
+        days = floor(timesec/86400);
+        hours = floor(mod(timesec,86400)/3600);
+        minutes = floor(mod(timesec,3600)/60);
+        seconds = mod(timesec,60);
+        timehhmmss = double(seconds+minutes*100+hours*10000);
     case 'PACMICE'
         ncfile = ['/kingair_data/pacmice16/work/20',date,'.c1.nc'];
         projdir = '/kingair_data/pacmice16/';
@@ -78,7 +90,11 @@ switch probe
         slashpos = find(inFile == '/',1,'last');
         outFile = [filedir,'SD.',inFile(slashpos+1:end)];
         sizeDist(inFile,outFile,tas,floor(timehhmmss),'CIP',6,0,pres,temp1,project,['20',date]);
-
+    case 'CIP'
+        filedir = [projdir,'WMI/20',date,'/'];
+        inFile = [filedir,'cat.DIMG.20',date,'.CIP.proc.cdf'];
+        outFile = [filedir,'SD.cat.DIMG.20',date,'.CIP.proc.cdf'];
+        sizeDist(inFile,outFile,tas,floor(timehhmmss),probe,6,0,pres,temp1,project,['20',date]);
     case '2DP'
         filedir = [projdir,'2DP/20',date,'/'];
         inFile = [filedir,'DIMG.20',date,'.2d.2dp.proc.cdf'];
